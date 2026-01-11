@@ -22,7 +22,7 @@ RUN apk add --no-cache \
     postgresql-dev
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_pgsql pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_pgsql pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd
 
 # Redirect Nginx logs
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/nginx/error.log
@@ -43,8 +43,8 @@ COPY --from=frontend-builder /app/dist /var/www/public
 # Install composer dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Setup storage and bootstrap cache permissions
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+# Setup storage, bootstrap cache, and database permissions
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
 
 # Copy Nginx and entrypoint configs from root
 COPY nginx.conf /etc/nginx/nginx.conf

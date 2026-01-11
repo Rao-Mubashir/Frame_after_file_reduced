@@ -38,5 +38,12 @@ fi
 # Start PHP-FPM and Nginx
 echo "Starting application on port $PORT..."
 php-fpm -D
+
+# Tail Laravel logs to stdout in the background
+if [ -f /var/www/storage/logs/laravel.log ]; then
+    tail -f /var/www/storage/logs/laravel.log &
+fi
+
 nginx -g "daemon off;"
+
 
