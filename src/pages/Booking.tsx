@@ -309,7 +309,7 @@ export default function Booking() {
                     >
                       <SelectTrigger
                         id="category"
-                        className={errors.category_id ? 'border-red-500' : 'border-transparent'}
+                        className={`bg-[#F5F1E8] border-2 border-transparent ${errors.category_id ? 'border-red-500' : ''}`}
                       >
                         <SelectValue placeholder="Choose a category..." />
                       </SelectTrigger>
@@ -352,7 +352,7 @@ export default function Booking() {
                       >
                         <SelectTrigger
                           id="sub_category"
-                          className={errors.sub_category_id ? 'border-red-500' : 'border-transparent'}
+                          className={`bg-[#F5F1E8] border-2 border-transparent ${errors.sub_category_id ? 'border-red-500' : ''}`}
                         >
                           <SelectValue placeholder="Choose a service..." />
                         </SelectTrigger>
@@ -396,7 +396,7 @@ export default function Booking() {
                       >
                         <SelectTrigger
                           id="instance"
-                          className={errors.instance_id ? 'border-red-500' : 'border-transparent'}
+                          className={`bg-[#F5F1E8] border-2 border-transparent ${errors.instance_id ? 'border-red-500' : ''}`}
                         >
                           <SelectValue placeholder="Choose a unit..." />
                         </SelectTrigger>
