@@ -360,7 +360,7 @@ export default function Profile() {
             </motion.div>
           ) : (
             // LOGGED OUT VIEW (Login/Register)
-            <div className="max-w-sm mx-auto my-20">
+            <div className="max-w-[260px] mx-auto my-20 mt-20 mb-20">
               <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100/50 overflow-hidden">
                 <div className="p-10 text-center bg-purple-900 text-white relative">
                   <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent)] pointer-events-none"></div>
