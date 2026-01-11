@@ -713,7 +713,7 @@ export default function ServiceDetails() {
       </div>
 
       {/* Subtitle Section */}
-      <section className="bg-white py-24 font-bold">
+      <section className="bg-white py-20 font-bold">
         <div className="max-w-[900px] mx-auto px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -721,7 +721,7 @@ export default function ServiceDetails() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-gray-900 mb-8">
+            <h2 className="text-gray-900 mb-8 text-4xl md:text-5xl font-bold">
               {service.subtitle}
             </h2>
             <p className="text-gray-600 text-xl leading-relaxed">

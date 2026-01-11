@@ -96,9 +96,11 @@ export function DestinationSection() {
               membership today
             </p>
             <div>
-              <button className="px-8 py-3 bg-white text-purple-900 rounded-full hover:bg-gray-100 transition-colors">
-                Enquire now
-              </button>
+              <a href="/booking">
+                <button className="px-8 py-3 bg-white text-purple-900 rounded-full hover:bg-gray-100 transition-colors">
+                  Book now
+                </button>
+              </a>
             </div>
           </div>
         </div>
