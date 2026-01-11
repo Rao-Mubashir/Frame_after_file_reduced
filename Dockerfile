@@ -31,7 +31,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/
 
 # Set environment defaults for Docker
 ENV SESSION_DRIVER=file
-ENV LOG_CHANNEL=errorlog
+ENV LOG_CHANNEL=stderr
 ENV APP_ENV=production
 ENV APP_DEBUG=false
 

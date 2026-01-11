@@ -16,14 +16,16 @@ if [ "$DB_CONNECTION" = "sqlite" ] || [ -z "$DB_CONNECTION" ]; then
         echo "Creating database/database.sqlite..."
         touch /var/www/database/database.sqlite
     fi
-    chown www-data:www-data /var/www/database/database.sqlite
-    chmod 664 /var/www/database/database.sqlite
+    # Set permissions on the directory and file so artisan commands can write to it
+    chown -R www-data:www-data /var/www/database
+    chmod -R 775 /var/www/database
 fi
 
 # Ensure storage and bootstrap folders are writable
-echo "Fixing permissions..."
-chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
-chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database
+echo "Fixing permissions for storage and cache..."
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
 
 
 # Create storage link if it doesn't exist

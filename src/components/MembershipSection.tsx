@@ -64,11 +64,11 @@ const reviews = [
 
 // Benefits data
 const benefits = [
-  "👉 Invest in your health so you not only get more years in your life, but more life in your years",
-  "👉 Nurture healthy habits in your family while spending quality time together",
-  "👉 Build strength and boost your mental wellbeing through exercise and mindful activities",
-  "👉 Improve your memory, productivity and creativity with regular exercise and classes",
-  "👉 Network, make friends and enjoy the company of old ones in our Clubrooms and workspaces",
+  "✔ Invest in your health so you not only get more years in your life, but more life in your years",
+  "✔ Nurture healthy habits in your family while spending quality time together",
+  "✔ Build strength and boost your mental wellbeing through exercise and mindful activities",
+  "✔ Improve your memory, productivity and creativity with regular exercise and classes",
+  "✔ Network, make friends and enjoy the company of old ones in our Clubrooms and workspaces",
 ];
 
 export function MembershipSection() {
@@ -156,9 +156,7 @@ export function MembershipSection() {
                 <br />
                 Choose services and access
                 <br />
-                to Clubs across the UK and
-                <br />
-                Europe
+                to Clubs across the UK .
               </p>
             </motion.div>
           </div>

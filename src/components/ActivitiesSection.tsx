@@ -328,7 +328,7 @@ export function ActivitiesSection() {
                   Dive into luxury in our temperature-controlled indoor swimming pool. Whether you're swimming laps for fitness or relaxing after a workout, our pristine pool area offers the perfect aquatic experience.
                 </p>
                 <Link to="/booking" className="inline-block px-8 py-3 md:px-10 md:py-4 bg-purple-900 text-white rounded-full hover:bg-purple-950 transition-all hover:scale-105 transform shadow-lg text-sm md:text-base">
-                  Book a swim
+                  Book a pool
                 </Link>
               </div>
             </motion.div>

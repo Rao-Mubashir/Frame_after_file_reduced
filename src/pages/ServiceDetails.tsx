@@ -389,22 +389,6 @@ export default function ServiceDetails() {
             "/images/snooker/IR5A8653.webp",
             "/images/snooker/IR5A8654.webp",
             "/images/snooker/IR5A8659.webp",
-            "/images/snooker/IR5A8660.webp",
-            "/images/snooker/IR5A8661.webp",
-            "/images/snooker/IR5A8677.webp",
-            "/images/snooker/IR5A8678.webp",
-            "/images/snooker/IR5A8679.webp",
-            "/images/snooker/IR5A8680.webp",
-            "/images/snooker/IR5A8685.webp",
-            "/images/snooker/IR5A8686.webp",
-            "/images/snooker/IR5A8729.webp",
-            "/images/snooker/IR5A8720.webp",
-            "/images/snooker/IR5A8731.webp",
-            "/images/snooker/IR5A8732.webp",
-            "/images/snooker/IR5A8733.webp",
-            "/images/snooker/IR5A8737.webp",
-            "/images/snooker/IR5A8738.webp",
-            "/images/snooker/IR5A8744.webp",
           ]
           : serviceId === "badminton"
             ? [
@@ -430,14 +414,6 @@ export default function ServiceDetails() {
                   "/images/game-arena/IR5A8701.webp",
                   "/images/game-arena/IR5A8703.webp",
                   "/images/game-arena/IR5A8704.webp",
-                  "/images/game-arena/IR5A8706.webp",
-                  "/images/game-arena/IR5A8707.webp",
-                  "/images/game-arena/IR5A8708.webp",
-                  "/images/game-arena/IR5A8710.webp",
-                  "/images/game-arena/IR5A8711.webp",
-                  "/images/game-arena/IR5A8712.webp",
-                  "/images/game-arena/IR5A8713.webp",
-                  "/images/game-arena/IR5A8714.webp",
                 ]
                 : serviceId === "swimming"
                   ? [
@@ -737,7 +713,7 @@ export default function ServiceDetails() {
       </div>
 
       {/* Subtitle Section */}
-      <section className="bg-white py-20">
+      <section className="bg-white py-24 font-bold">
         <div className="max-w-[900px] mx-auto px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
