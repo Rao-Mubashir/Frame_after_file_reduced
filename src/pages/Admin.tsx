@@ -406,7 +406,7 @@ export default function Admin() {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <div className="max-w-7xl mx-auto py-8 px-4">
+      <div className="max-w-7xl mx-auto pt-20 pb-12 px-4">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-purple-900 mb-4">Admin Dashboard</h1>
@@ -593,7 +593,7 @@ export default function Admin() {
                         <div className="text-xs text-gray-500">{booking.start_time} - {booking.end_time}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${booking.status === 'confirmed' ? 'bg-purple-100 text-purple-800' :
                           booking.status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
                           }`}>
                           {booking.status}

@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { Eye, EyeOff, CheckCircle2, AlertCircle, Calendar, Clock } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '../components/ui/select';
 import axios from 'axios';
 
 const API_BASE_URL = '/api';
@@ -61,6 +68,7 @@ export default function Booking() {
 
   const {
     register,
+    control,
     handleSubmit,
     watch,
     formState: { errors },
@@ -290,17 +298,31 @@ export default function Booking() {
                 <label htmlFor="category" className="block text-gray-800 mb-3 text-lg font-medium">
                   Select Category <span className="text-purple-900">*</span>
                 </label>
-                <select
-                  id="category"
-                  {...register('category_id', { required: 'Please select a category' })}
-                  className={`w-full px-6 py-4 bg-[#F5F1E8] border-2 rounded-2xl focus:outline-none focus:border-purple-900 transition-colors text-gray-800 cursor-pointer ${errors.category_id ? 'border-red-500' : 'border-transparent'
-                    }`}
-                >
-                  <option value="">Choose a category...</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
-                </select>
+                <Controller
+                  name="category_id"
+                  control={control}
+                  rules={{ required: 'Please select a category' }}
+                  render={({ field }) => (
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value || ""}
+                    >
+                      <SelectTrigger
+                        id="category"
+                        className={errors.category_id ? 'border-red-500' : 'border-transparent'}
+                      >
+                        <SelectValue placeholder="Choose a category..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id.toString()}>
+                            {cat.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
                 {errors.category_id && (
                   <p className="text-red-600 text-sm mt-2 flex items-center gap-2">
                     <AlertCircle className="w-4 h-4" />
@@ -319,19 +341,31 @@ export default function Booking() {
                   <label htmlFor="sub_category" className="block text-gray-800 mb-3 text-lg font-medium">
                     Select Service Type <span className="text-purple-900">*</span>
                   </label>
-                  <select
-                    id="sub_category"
-                    {...register('sub_category_id', { required: 'Please select a service type' })}
-                    className={`w-full px-6 py-4 bg-[#F5F1E8] border-2 rounded-2xl focus:outline-none focus:border-purple-900 transition-colors text-gray-800 cursor-pointer ${errors.sub_category_id ? 'border-red-500' : 'border-transparent'
-                      }`}
-                  >
-                    <option value="">Choose a service...</option>
-                    {subCategories.map((subCat) => (
-                      <option key={subCat.id} value={subCat.id}>
-                        {subCat.name}
-                      </option>
-                    ))}
-                  </select>
+                  <Controller
+                    name="sub_category_id"
+                    control={control}
+                    rules={{ required: 'Please select a service type' }}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value || ""}
+                      >
+                        <SelectTrigger
+                          id="sub_category"
+                          className={errors.sub_category_id ? 'border-red-500' : 'border-transparent'}
+                        >
+                          <SelectValue placeholder="Choose a service..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {subCategories.map((subCat) => (
+                            <SelectItem key={subCat.id} value={subCat.id.toString()}>
+                              {subCat.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                   {errors.sub_category_id && (
                     <p className="text-red-600 text-sm mt-2 flex items-center gap-2">
                       <AlertCircle className="w-4 h-4" />
@@ -351,19 +385,31 @@ export default function Booking() {
                   <label htmlFor="instance" className="block text-gray-800 mb-3 text-lg font-medium">
                     Select Specific Unit <span className="text-purple-900">*</span>
                   </label>
-                  <select
-                    id="instance"
-                    {...register('instance_id', { required: 'Please select a unit' })}
-                    className={`w-full px-6 py-4 bg-[#F5F1E8] border-2 rounded-2xl focus:outline-none focus:border-purple-900 transition-colors text-gray-800 cursor-pointer ${errors.instance_id ? 'border-red-500' : 'border-transparent'
-                      }`}
-                  >
-                    <option value="">Choose a unit...</option>
-                    {instances.map((inst) => (
-                      <option key={inst.id} value={inst.id}>
-                        {inst.name} ({inst.identifier})
-                      </option>
-                    ))}
-                  </select>
+                  <Controller
+                    name="instance_id"
+                    control={control}
+                    rules={{ required: 'Please select a unit' }}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value || ""}
+                      >
+                        <SelectTrigger
+                          id="instance"
+                          className={errors.instance_id ? 'border-red-500' : 'border-transparent'}
+                        >
+                          <SelectValue placeholder="Choose a unit..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {instances.map((inst) => (
+                            <SelectItem key={inst.id} value={inst.id.toString()}>
+                              {inst.name} ({inst.identifier})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                   {errors.instance_id && (
                     <p className="text-red-600 text-sm mt-2 flex items-center gap-2">
                       <AlertCircle className="w-4 h-4" />
@@ -465,7 +511,7 @@ export default function Booking() {
                       id="name"
                       type="text"
                       {...register('name', { required: !isAuthenticated && 'Name is required' })}
-                      className={`w-full px-6 py-4 bg-[#F5F1E8] border-2 rounded-2xl focus:outline-none focus:border-purple-900 transition-colors text-gray-800 ${errors.name ? 'border-red-500' : 'border-transparent'
+                      className={`w-full px-6 py-4 bg-white border-2 rounded-2xl focus:outline-none focus:border-purple-900 transition-all text-gray-800 ${errors.name ? 'border-red-500' : 'border-transparent shadow-sm'
                         }`}
                       placeholder="Enter your full name"
                     />
@@ -492,7 +538,7 @@ export default function Booking() {
                           message: 'Invalid email address'
                         }
                       })}
-                      className={`w-full px-6 py-4 bg-[#F5F1E8] border-2 rounded-2xl focus:outline-none focus:border-purple-900 transition-colors text-gray-800 ${errors.email ? 'border-red-500' : 'border-transparent'
+                      className={`w-full px-6 py-4 bg-white border-2 rounded-2xl focus:outline-none focus:border-purple-900 transition-all text-gray-800 ${errors.email ? 'border-red-500' : 'border-transparent shadow-sm'
                         }`}
                       placeholder="Enter your email"
                     />
@@ -520,7 +566,7 @@ export default function Booking() {
                             message: 'Password must be at least 8 characters',
                           },
                         })}
-                        className={`w-full px-6 py-4 bg-[#F5F1E8] border-2 rounded-2xl focus:outline-none focus:border-purple-900 transition-colors text-gray-800 pr-14 ${errors.password ? 'border-red-500' : 'border-transparent'
+                        className={`w-full px-6 py-4 bg-white border-2 rounded-2xl focus:outline-none focus:border-purple-900 transition-all text-gray-800 pr-14 ${errors.password ? 'border-red-500' : 'border-transparent shadow-sm'
                           }`}
                         placeholder="Create a password"
                       />
@@ -553,7 +599,7 @@ export default function Booking() {
                           required: !isAuthenticated && 'Please confirm your password',
                           validate: (value) => !isAuthenticated && (value === password || 'Passwords do not match'),
                         })}
-                        className={`w-full px-6 py-4 bg-[#F5F1E8] border-2 rounded-2xl focus:outline-none focus:border-purple-900 transition-colors text-gray-800 pr-14 ${errors.confirmPassword ? 'border-red-500' : 'border-transparent'
+                        className={`w-full px-6 py-4 bg-white border-2 rounded-2xl focus:outline-none focus:border-purple-900 transition-all text-gray-800 pr-14 ${errors.confirmPassword ? 'border-red-500' : 'border-transparent shadow-sm'
                           }`}
                         placeholder="Confirm your password"
                       />

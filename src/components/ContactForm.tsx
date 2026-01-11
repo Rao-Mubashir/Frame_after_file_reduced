@@ -9,6 +9,13 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from './ui/select';
 
 interface ContactDetails {
   email?: string;
@@ -102,6 +109,13 @@ export function ContactForm({ contact }: { contact?: ContactDetails }) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSelectChange = (value: string) => {
+    setFormData({
+      ...formData,
+      subject: value,
     });
   };
 
@@ -408,34 +422,25 @@ export function ContactForm({ contact }: { contact?: ContactDetails }) {
                       >
                         Subject *
                       </label>
-                      <select
-                        id="subject"
-                        name="subject"
+                      <Select
+                        onValueChange={handleSelectChange}
                         value={formData.subject}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-purple-900 focus:shadow-lg transition-all duration-300 bg-white/50"
                       >
-                        <option value="">
-                          Select a subject
-                        </option>
-                        <option value="membership">
-                          Membership Enquiry
-                        </option>
-                        <option value="facilities">
-                          Facilities Information
-                        </option>
-                        <option value="booking">
-                          Book a Tour
-                        </option>
-                        <option value="feedback">
-                          Feedback
-                        </option>
-                        <option value="booking">
-                          Booking Queries
-                        </option>
-                        <option value="other">Other</option>
-                      </select>
+                        <SelectTrigger
+                          id="subject"
+                          className="w-full px-5 py-8 border-2 border-gray-200 rounded-2xl focus:border-purple-900 focus:shadow-lg transition-all duration-300 bg-white/50"
+                        >
+                          <SelectValue placeholder="Select a subject" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="membership">Membership Enquiry</SelectItem>
+                          <SelectItem value="facilities">Facilities Information</SelectItem>
+                          <SelectItem value="tour">Book a Tour</SelectItem>
+                          <SelectItem value="feedback">Feedback</SelectItem>
+                          <SelectItem value="booking">Booking Queries</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </motion.div>
                   </div>
 
