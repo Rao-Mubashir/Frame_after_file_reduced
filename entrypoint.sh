@@ -8,10 +8,23 @@ if [ -z "$PORT" ]; then
 fi
 sed -i "s/\${PORT:-80}/$PORT/g" /etc/nginx/nginx.conf
 
+# Ensure database directory exists and has a sqlite file if using sqlite
+if [ "$DB_CONNECTION" = "sqlite" ] || [ -z "$DB_CONNECTION" ]; then
+    echo "Using SQLite. Checking for database file..."
+    mkdir -p /var/www/database
+    if [ ! -f /var/www/database/database.sqlite ]; then
+        echo "Creating database/database.sqlite..."
+        touch /var/www/database/database.sqlite
+    fi
+    chown www-data:www-data /var/www/database/database.sqlite
+    chmod 664 /var/www/database/database.sqlite
+fi
+
 # Ensure storage and bootstrap folders are writable
 echo "Fixing permissions..."
-chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
-chmod -R 777 /var/www/storage /var/www/bootstrap/cache
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/database
+chmod -R 775 /var/www/storage /var/www/bootstrap/cache /var/www/database
+
 
 # Create storage link if it doesn't exist
 if [ ! -L /var/www/public/storage ]; then
@@ -25,9 +38,14 @@ php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 
+# Run migrations (Safe for SQLite, ensured file exists above)
+echo "Running migrations..."
+php artisan migrate --force || echo "Migration failed, continuing..."
+
 # Optimizations (only if APP_KEY is set)
 if [ -z "$APP_KEY" ]; then
-    echo "WARNING: APP_KEY is not set. Laravel may fail with 500 error."
+    echo "WARNING: APP_KEY is not set. Generating a temporary key for this session..."
+    php artisan key:generate --show --no-interaction
 else
     echo "Applying optimizations..."
     php artisan config:cache

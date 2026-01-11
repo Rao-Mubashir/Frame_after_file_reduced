@@ -29,6 +29,12 @@ RUN docker-php-ext-install pdo_pgsql pdo_mysql pdo_sqlite mbstring exif pcntl bc
 # Redirect Nginx logs
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/nginx/error.log
 
+# Set environment defaults for Docker
+ENV SESSION_DRIVER=file
+ENV LOG_CHANNEL=errorlog
+ENV APP_ENV=production
+ENV APP_DEBUG=false
+
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
