@@ -11,7 +11,7 @@ INSERT INTO sub_categories (id, category_id, name, slug, price_per_hour, is_acti
 (1, 3, 'Snooker', 'snooker', 500, 1, datetime('now'), datetime('now')),
 (2, 3, 'Double Snooker', 'double-snooker', 800, 1, datetime('now'), datetime('now')),
 (3, 3, 'Snooker & PS', 'snooker-ps', 700, 1, datetime('now'), datetime('now')),
-(4, 7, 'VIP', 'vip', 1500, 1, datetime('now'), datetime('now')),
+(4, 7, 'VIP Room', 'vip-room', 1500, 1, datetime('now'), datetime('now')),
 (5, 5, 'Pool & PS', 'pool-ps', 600, 1, datetime('now'), datetime('now')),
 (6, 4, 'Double PlayStation', 'double-playstation', 600, 1, datetime('now'), datetime('now')),
 (7, 4, 'PlayStation', 'playstation', 400, 1, datetime('now'), datetime('now')),

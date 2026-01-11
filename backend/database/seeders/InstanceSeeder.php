@@ -14,7 +14,7 @@ class InstanceSeeder extends Seeder
             ['sub_category' => 'Snooker', 'count' => 19, 'prefix' => 'SNOOKER'],
             ['sub_category' => 'Double Snooker', 'count' => 1, 'prefix' => 'DBL-SNOOKER'],
             ['sub_category' => 'Snooker & PS', 'count' => 15, 'prefix' => 'SNOOKER-PS', 'category' => 'Snooker'],
-            ['sub_category' => 'VIP', 'count' => 4, 'prefix' => 'VIP'],
+            ['sub_category' => 'VIP Room', 'count' => 4, 'prefix' => 'VIP'],
             ['sub_category' => 'Pool & PS', 'count' => 3, 'prefix' => 'POOL-PS', 'category' => 'Pool'],
             ['sub_category' => 'Double PlayStation', 'count' => 2, 'prefix' => 'DBL-PS'],
             ['sub_category' => 'PlayStation', 'count' => 8, 'prefix' => 'PS'],

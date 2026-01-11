@@ -15,7 +15,7 @@ class SubCategorySeeder extends Seeder
             ['category' => 'Snooker', 'name' => 'Snooker', 'price' => 500],
             ['category' => 'Snooker', 'name' => 'Double Snooker', 'price' => 800],
             ['category' => 'Snooker', 'name' => 'Snooker & PS', 'price' => 700],
-            ['category' => 'Leisure Rooms', 'name' => 'VIP', 'price' => 1500],
+            ['category' => 'Leisure Rooms', 'name' => 'VIP Room', 'price' => 1500],
             ['category' => 'Pool', 'name' => 'Pool & PS', 'price' => 600],
             ['category' => 'PlayStations', 'name' => 'Double PlayStation', 'price' => 600],
             ['category' => 'PlayStations', 'name' => 'PlayStation', 'price' => 400],
