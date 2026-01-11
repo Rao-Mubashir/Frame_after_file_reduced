@@ -360,106 +360,144 @@ export default function Profile() {
             </motion.div>
           ) : (
             // LOGGED OUT VIEW (Login/Register)
-            <div className="max-w-md mx-auto my-12">
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                <div className="p-8 text-center bg-purple-900 text-white">
-                  <h2 className="text-2xl font-bold mb-2">Welcome Back</h2>
-                  <p className="text-purple-100 text-sm">Access your account to manage your profile.</p>
+            <div className="max-w-sm mx-auto my-20">
+              <div className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100/50 overflow-hidden">
+                <div className="p-10 text-center bg-purple-900 text-white relative">
+                  <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent)] pointer-events-none"></div>
+                  <h2 className="text-3xl font-bold mb-3 tracking-tight">
+                    {isLogin ? 'Welcome Back' : 'Get Started'}
+                  </h2>
+                  <p className="text-purple-100/80 text-sm leading-relaxed px-4">
+                    {isLogin
+                      ? 'Access your account to manage your profile.'
+                      : 'Join us today and experience premium wellness.'}
+                  </p>
                 </div>
-                <div className="p-8">
-                  <div className="flex gap-4 border-b border-gray-200 mb-6 p-2">
+
+                <div className="p-8 sm:p-10">
+                  {/* Custom Tab Navigation with Animated Underline */}
+                  <div className="relative flex mb-10 border-b border-gray-100">
                     <button
-                      className={`flex-1 py-2 text-sm font-semibold bg-gray-200 rounded-md transition-colors cursor-pointer
-                        ${isLogin
-                          ? 'text-purple-800 hover:bg-purple-800 rounded-md'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
+                      type="button"
+                      className={`flex-1 py-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 relative z-10
+                        ${isLogin ? 'text-purple-900' : 'text-gray-400 hover:text-gray-600'}`}
                       onClick={() => setIsLogin(true)}
                     >
                       Login
                     </button>
-
                     <button
-                      className={`flex-1 py-2 text-sm font-semibold bg-gray-200 rounded-md transition-colors cursor-pointer
-                        ${!isLogin
-                          ? 'text-purple-800 hover:bg-purple-800 rounded-md'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
+                      type="button"
+                      className={`flex-1 py-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 relative z-10
+                        ${!isLogin ? 'text-purple-900' : 'text-gray-400 hover:text-gray-600'}`}
                       onClick={() => setIsLogin(false)}
                     >
                       Register
                     </button>
+
+                    {/* Animated Underline Indicator */}
+                    <motion.div
+                      className="absolute bottom-0 left-0 h-[3px] bg-purple-900 rounded-full z-20"
+                      initial={false}
+                      animate={{
+                        left: isLogin ? '0%' : '50%'
+                      }}
+                      style={{ width: '50%' }}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
                   </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <form onSubmit={handleSubmit} className="space-y-6">
                     {!isLogin && (
-                      <div>
-                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Name</label>
-                        <div className="relative">
-                          <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Full Name</label>
+                        <div className="relative group">
+                          <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-purple-600 transition-colors" />
                           <input
                             type="text"
                             name="name"
                             value={formData.name}
                             onChange={handleInputChange}
-                            className="w-full pl-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                            className="w-full pl-12 pr-4 h-13 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800 placeholder:text-gray-300"
                             placeholder="John Doe" />
                         </div>
-                      </div>
+                      </motion.div>
                     )}
 
-                    <div>
-                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Email</label>
-                      <div className="relative">
-                        <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <motion.div
+                      layout
+                      transition={{ duration: 0.3 }}
+                    >
+                      <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+                      <div className="relative group">
+                        <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-purple-600 transition-colors" />
                         <input
                           type="email"
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className="w-full pl-12 pr-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                          className="w-full pl-12 pr-4 h-13 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800 placeholder:text-gray-300"
                           placeholder="you@example.com"
                         />
                       </div>
-                    </div>
+                    </motion.div>
 
-                    <div>
-                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Password</label>
-                      <div className="relative">
-                        <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <motion.div
+                      layout
+                      transition={{ duration: 0.3 }}
+                    >
+                      <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Password</label>
+                      <div className="relative group">
+                        <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-purple-600 transition-colors" />
                         <input
                           type="password"
                           name="password"
                           value={formData.password}
                           onChange={handleInputChange}
-                          className="w-full pl-12 pr-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                          className="w-full pl-12 pr-4 h-13 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800"
+                          placeholder="••••••••"
                         />
                       </div>
-                    </div>
+                    </motion.div>
 
                     {!isLogin && (
-                      <div>
-                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Confirm Password</label>
-                        <div className="relative">
-                          <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Confirm Password</label>
+                        <div className="relative group">
+                          <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-purple-600 transition-colors" />
                           <input
                             type="password"
                             name="password_confirmation"
                             value={formData.password_confirmation}
                             onChange={handleInputChange}
-                            className="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                            className="w-full pl-12 pr-4 h-13 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800"
+                            placeholder="••••••••"
                           />
                         </div>
-                      </div>
+                      </motion.div>
                     )}
 
-                    <button
+                    <motion.button
+                      layout
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-purple-900 text-white py-3 rounded-lg hover:bg-purple-800 transition-colors font-medium shadow-sm mt-4"
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full h-14 bg-purple-900 text-white rounded-2xl hover:bg-purple-950 transition-all font-bold shadow-xl shadow-purple-900/20 mt-4 disabled:opacity-70 flex items-center justify-center gap-2"
                     >
-                      {isSubmitting ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
-                    </button>
+                      {isSubmitting ? (
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      ) : (
+                        isLogin ? 'Sign In' : 'Create Account'
+                      )}
+                    </motion.button>
                   </form>
                 </div>
               </div>

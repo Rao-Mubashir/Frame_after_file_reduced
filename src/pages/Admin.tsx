@@ -408,7 +408,7 @@ export default function Admin() {
       <Navbar />
       <div className="max-w-7xl mx-auto pt-32 pb-12 px-4">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 mt-16">
           <h1 className="text-5xl font-bold text-purple-900 mb-4">Admin Dashboard</h1>
           <p className="text-xl text-gray-600">Manage your application and users</p>
         </div>
