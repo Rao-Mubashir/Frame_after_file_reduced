@@ -169,7 +169,7 @@ export default function Profile() {
         </motion.div>
       )}
 
-      <div className="flex-grow pt-24 pb-12 px-4 sm:px-6">
+      <div className="flex-grow pt-32 pb-32 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto w-full">
           {user ? (
             // LOGGED IN VIEW
@@ -421,7 +421,7 @@ export default function Profile() {
                             name="name"
                             value={formData.name}
                             onChange={handleInputChange}
-                            className="w-full pl-12 pr-4 h-13 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800 placeholder:text-gray-300"
+                            className="w-full pl-12 pr-4 h-16 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800 placeholder:text-gray-300"
                             placeholder="John Doe" />
                         </div>
                       </motion.div>
@@ -439,7 +439,7 @@ export default function Profile() {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className="w-full pl-12 pr-4 h-13 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800 placeholder:text-gray-300"
+                          className="w-full pl-12 pr-4 h-16 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800 placeholder:text-gray-300"
                           placeholder="you@example.com"
                         />
                       </div>
@@ -457,7 +457,7 @@ export default function Profile() {
                           name="password"
                           value={formData.password}
                           onChange={handleInputChange}
-                          className="w-full pl-12 pr-4 h-13 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800"
+                          className="w-full pl-12 pr-4 h-16 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800"
                           placeholder="••••••••"
                         />
                       </div>
@@ -477,7 +477,7 @@ export default function Profile() {
                             name="password_confirmation"
                             value={formData.password_confirmation}
                             onChange={handleInputChange}
-                            className="w-full pl-12 pr-4 h-13 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800"
+                            className="w-full pl-12 pr-4 h-16 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:border-purple-900/20 focus:ring-4 focus:ring-purple-900/5 outline-none transition-all text-gray-800"
                             placeholder="••••••••"
                           />
                         </div>
