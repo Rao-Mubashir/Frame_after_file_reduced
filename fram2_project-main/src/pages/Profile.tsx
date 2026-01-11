@@ -1,0 +1,474 @@
+import { useState } from 'react';
+import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
+import { Navbar } from '../components/Navbar';
+import { Footer } from '../components/Footer';
+import { motion } from 'framer-motion';
+import {
+  Camera,
+  User,
+  Mail,
+  Lock,
+  Save,
+  LogOut,
+  Shield,
+  CheckCircle,
+  AlertCircle
+} from 'lucide-react';
+
+export default function Profile() {
+  const { user, login, register, logout, updateProfile, loading } = useAuth();
+  const [isLogin, setIsLogin] = useState(true);
+  const [activeTab, setActiveTab] = useState('general'); // 'general' or 'security'
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+  });
+
+  const [profileData, setProfileData] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+  });
+
+  const [passwordData, setPasswordData] = useState({
+    current_password: '',
+    password: '',
+    password_confirmation: '',
+  });
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProfileData({ ...profileData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      // Create a preview URL
+      const objectUrl = URL.createObjectURL(file);
+      setPreviewUrl(objectUrl);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsSubmitting(true);
+    try {
+      if (isLogin) {
+        await login(formData.email, formData.password);
+        setSuccess('Welcome back!');
+      } else {
+        await register(formData.name, formData.email, formData.password, formData.password_confirmation);
+        setSuccess('Account created successfully!');
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message ||
+        (err.response?.data?.errors ? Object.values(err.response.data.errors).flat().join(', ') : err.message || String(err));
+      setError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleProfileUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    setIsSubmitting(true);
+
+    const data = new FormData();
+    data.append('name', profileData.name);
+    data.append('email', profileData.email);
+    if (selectedFile) {
+      data.append('profile_picture', selectedFile);
+    }
+
+    try {
+      await updateProfile(data);
+      setSuccess('Profile updated successfully!');
+      setSelectedFile(null);
+      setPreviewUrl(null);
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message ||
+        (err.response?.data?.errors ? Object.values(err.response.data.errors).flat().join(', ') : err.message || String(err));
+      setError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
+  };
+
+  const handlePasswordUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (passwordData.password !== passwordData.password_confirmation) {
+      setError('New passwords do not match');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await axios.post('/api/profile/update-password', passwordData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setSuccess('Password updated successfully!');
+      setPasswordData({ current_password: '', password: '', password_confirmation: '' });
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message ||
+        (err.response?.data?.errors ? Object.values(err.response.data.errors).flat().join(', ') : err.message || String(err));
+      setError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-900"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      <Navbar />
+
+      {/* Messages Toast-style */}
+      {(error || success) && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`fixed top-24 right-4 z-50 p-4 rounded-lg shadow-lg flex items-center gap-3 w-auto max-w-sm ${error ? 'bg-red-50 text-red-800 border border-red-200' : 'bg-green-50 text-green-800 border border-green-200'
+            }`}
+        >
+          {error ? <AlertCircle className="w-5 h-5 flex-shrink-0" /> : <CheckCircle className="w-5 h-5 flex-shrink-0" />}
+          <p className="font-medium text-sm">{error || success}</p>
+          <button onClick={() => { setError(''); setSuccess(''); }} className="ml-auto text-sm opacity-60 hover:opacity-100">✕</button>
+        </motion.div>
+      )}
+
+      <div className="flex-grow pt-24 pb-12 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto w-full">
+          {user ? (
+            // LOGGED IN VIEW
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+            >
+              {/* Header / Cover */}
+              <div className="h-32 bg-gradient-to-r from-purple-800 to-indigo-800 relative"></div>
+
+              <div className="px-6 sm:px-8 pb-8">
+                {/* Profile Picture & Basic Info - Row */}
+                <div className="relative flex flex-col sm:flex-row items-center sm:items-end -mt-12 mb-8 gap-4 sm:gap-6 text-center sm:text-left">
+                  <div className="relative group flex-shrink-0">
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-200">
+                      <img
+                        src={
+                          previewUrl ||
+                          (user.profile_picture
+                            ? `/storage/${user.profile_picture}`
+                            : 'https://ui-avatars.com/api/?name=' + user.name + '&background=random')
+                        }
+                        alt={user.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + user.name + '&background=random';
+                        }}
+                      />
+                    </div>
+                    <label
+                      htmlFor="profile-upload"
+                      className="absolute bottom-0 right-0 w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center cursor-pointer shadow-sm hover:bg-purple-700 transition-colors z-10"
+                      title="Change Profile Picture"
+                    >
+                      <Camera size={16} />
+                    </label>
+                    <input
+                      id="profile-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                  </div>
+
+                  <div className="flex-grow pt-2 sm:pb-2">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{user.name}</h1>
+                    <p className="text-gray-500">{user.email}</p>
+                  </div>
+
+                  <button
+                    onClick={logout}
+                    className="flex-shrink-0 flex items-center gap-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium mt-2 sm:mt-0"
+                  >
+                    <LogOut size={16} />
+                    Sign Out
+                  </button>
+                </div>
+
+                {/* Tabs */}
+                <div className="flex border-b border-gray-200 mb-8">
+                  <button
+                    onClick={() => setActiveTab('general')}
+                    className={`flex-1 pb-3 px-1 text-sm font-medium transition-colors text-center ${activeTab === 'general'
+                      ? 'text-purple-600 border-b-2 border-purple-600'
+                      : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                  >
+                    Personal Information
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('security')}
+                    className={`flex-1 pb-3 px-1 text-sm font-medium transition-colors text-center ${activeTab === 'security'
+                      ? 'text-purple-600 border-b-2 border-purple-600'
+                      : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                  >
+                    Security & Password
+                  </button>
+                </div>
+
+                {/* Tab Content */}
+                <div className="max-w-2xl">
+                  {activeTab === 'general' ? (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {selectedFile && (
+                        <div className="mb-6 bg-blue-50 text-blue-800 px-4 py-3 rounded-lg text-sm flex items-center gap-2">
+                          <AlertCircle size={16} />
+                          Click "Save Changes" to upload your new picture.
+                        </div>
+                      )}
+
+                      <form onSubmit={handleProfileUpdate} className="space-y-6">
+                        <div className="grid gap-6 sm:grid-cols-2">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input
+                              type="text"
+                              name="name"
+                              value={profileData.name}
+                              onChange={handleProfileChange}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input
+                              type="email"
+                              name="email"
+                              value={profileData.email}
+                              onChange={handleProfileChange}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex justify-end pt-2">
+                          <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="bg-purple-900 text-white px-6 py-2 rounded-lg hover:bg-purple-800 transition-colors shadow-sm disabled:opacity-70 text-sm font-medium"
+                          >
+                            {isSubmitting ? 'Saving...' : 'Save Changes'}
+                          </button>
+                        </div>
+                      </form>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <form onSubmit={handlePasswordUpdate} className="space-y-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                          <input
+                            type="password"
+                            name="current_password"
+                            value={passwordData.current_password}
+                            onChange={handlePasswordChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
+                          />
+                        </div>
+
+                        <div className="grid gap-6 sm:grid-cols-2">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                            <input
+                              type="password"
+                              name="password"
+                              value={passwordData.password}
+                              onChange={handlePasswordChange}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                            <input
+                              type="password"
+                              name="password_confirmation"
+                              value={passwordData.password_confirmation}
+                              onChange={handlePasswordChange}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex justify-end pt-2">
+                          <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="bg-purple-900 text-white px-6 py-2 rounded-lg hover:bg-purple-800 transition-colors shadow-sm disabled:opacity-70 text-sm font-medium"
+                          >
+                            {isSubmitting ? 'Updating...' : 'Update Password'}
+                          </button>
+                        </div>
+                      </form>
+                    </motion.div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ) : (
+            // LOGGED OUT VIEW (Login/Register)
+            <div className="max-w-md mx-auto my-12">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div className="p-8 text-center bg-purple-900 text-white">
+                  <h2 className="text-2xl font-bold mb-2">Welcome Back</h2>
+                  <p className="text-purple-100 text-sm">Access your account to manage your profile.</p>
+                </div>
+                <div className="p-8">
+                  <div className="flex gap-4 border-b border-gray-200 mb-6 p-2">
+                    <button
+                      className={`flex-1 py-2 text-sm font-semibold bg-gray-200 rounded-md transition-colors cursor-pointer
+                        ${isLogin
+                          ? 'text-purple-800 hover:bg-purple-800 rounded-md'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                      onClick={() => setIsLogin(true)}
+                    >
+                      Login
+                    </button>
+
+                    <button
+                      className={`flex-1 py-2 text-sm font-semibold bg-gray-200 rounded-md transition-colors cursor-pointer
+                        ${!isLogin
+                          ? 'text-purple-800 hover:bg-purple-800 rounded-md'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                      onClick={() => setIsLogin(false)}
+                    >
+                      Register
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    {!isLogin && (
+                      <div>
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Name</label>
+                        <div className="relative">
+                          <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                          <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            className="w-full pl-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                            placeholder="John Doe" />
+                        </div>
+                      </div>
+                    )}
+
+                    <div>
+                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Email</label>
+                      <div className="relative">
+                        <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          className="w-full pl-12 pr-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                          placeholder="you@example.com"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Password</label>
+                      <div className="relative">
+                        <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                          type="password"
+                          name="password"
+                          value={formData.password}
+                          onChange={handleInputChange}
+                          className="w-full pl-12 pr-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {!isLogin && (
+                      <div>
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Confirm Password</label>
+                        <div className="relative">
+                          <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" />
+                          <input
+                            type="password"
+                            name="password_confirmation"
+                            value={formData.password_confirmation}
+                            onChange={handleInputChange}
+                            className="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-purple-900 text-white py-3 rounded-lg hover:bg-purple-800 transition-colors font-medium shadow-sm mt-4"
+                    >
+                      {isSubmitting ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+  );
+}
