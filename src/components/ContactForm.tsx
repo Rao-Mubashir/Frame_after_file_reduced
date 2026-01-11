@@ -428,7 +428,7 @@ export function ContactForm({ contact }: { contact?: ContactDetails }) {
                       >
                         <SelectTrigger
                           id="subject"
-                          className="bg-white/50 border-gray-200"
+                          className="bg-white/50 border-gray-200 border-2 rounded-2xl"
                         >
                           <SelectValue placeholder="Select a subject" />
                         </SelectTrigger>
