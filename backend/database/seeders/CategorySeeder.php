@@ -21,12 +21,14 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            Category::create([
-                'name' => $category['name'],
-                'slug' => Str::slug($category['name']),
-                'icon' => $category['icon'],
-                'is_active' => true,
-            ]);
+            Category::updateOrCreate(
+                ['slug' => Str::slug($category['name'])],
+                [
+                    'name' => $category['name'],
+                    'icon' => $category['icon'],
+                    'is_active' => true,
+                ]
+            );
         }
     }
 }

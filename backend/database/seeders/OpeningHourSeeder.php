@@ -20,12 +20,14 @@ class OpeningHourSeeder extends Seeder
         ];
 
         foreach ($openingHours as $hours) {
-            OpeningHour::create([
-                'day_of_week' => $hours['day'],
-                'opening_time' => $hours['open'],
-                'closing_time' => $hours['close'],
-                'is_open' => true,
-            ]);
+            OpeningHour::updateOrCreate(
+                ['day_of_week' => $hours['day']],
+                [
+                    'opening_time' => $hours['open'],
+                    'closing_time' => $hours['close'],
+                    'is_open' => true,
+                ]
+            );
         }
     }
 }

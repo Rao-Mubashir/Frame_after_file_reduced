@@ -42,6 +42,11 @@ php artisan view:clear
 echo "Running migrations..."
 php artisan migrate --force || echo "Migration failed, continuing..."
 
+# Seed the database
+echo "Seeding database..."
+php artisan db:seed --force || echo "Seeding failed, continuing..."
+
+
 # Optimizations (only if APP_KEY is set)
 if [ -z "$APP_KEY" ]; then
     echo "WARNING: APP_KEY is not set. Generating a temporary key for this session..."

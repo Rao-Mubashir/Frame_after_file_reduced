@@ -35,12 +35,15 @@ class InstanceSeeder extends Seeder
             
             if ($subCategory) {
                 for ($i = 1; $i <= $instanceData['count']; $i++) {
-                    Instance::create([
-                        'sub_category_id' => $subCategory->id,
-                        'name' => $instanceData['sub_category'] . ' ' . $i,
-                        'identifier' => $instanceData['prefix'] . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
-                        'is_active' => true,
-                    ]);
+                    $identifier = $instanceData['prefix'] . '-' . str_pad($i, 3, '0', STR_PAD_LEFT);
+                    Instance::updateOrCreate(
+                        ['identifier' => $identifier],
+                        [
+                            'sub_category_id' => $subCategory->id,
+                            'name' => $instanceData['sub_category'] . ' ' . $i,
+                            'is_active' => true,
+                        ]
+                    );
                 }
             }
         }
