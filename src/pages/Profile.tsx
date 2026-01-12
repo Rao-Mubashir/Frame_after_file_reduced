@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import { Navbar } from '../components/Navbar';
@@ -13,13 +13,16 @@ import {
   LogOut,
   Shield,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Calendar,
+  Clock,
+  DollarSign
 } from 'lucide-react';
 
 export default function Profile() {
   const { user, login, register, logout, updateProfile, loading } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
-  const [activeTab, setActiveTab] = useState('general'); // 'general' or 'security'
+  const [activeTab, setActiveTab] = useState('general'); // 'general', 'security', or 'bookings'
 
   const [formData, setFormData] = useState({
     name: '',
@@ -44,6 +47,34 @@ export default function Profile() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Bookings state
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [bookingsLoading, setBookingsLoading] = useState(false);
+
+  // Fetch bookings when Bookings tab is selected
+  useEffect(() => {
+    if (activeTab === 'bookings' && user) {
+      fetchBookings();
+    }
+  }, [activeTab, user]);
+
+  const fetchBookings = async () => {
+    setBookingsLoading(true);
+    try {
+      const response = await axios.get('/api/user/bookings', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setBookings(response.data.bookings || []);
+    } catch (err: any) {
+      console.error('Failed to fetch bookings:', err);
+      setBookings([]);
+    } finally {
+      setBookingsLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -176,10 +207,12 @@ export default function Profile() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+              className="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100/50 overflow-hidden"
             >
               {/* Header / Cover */}
-              <div className="h-32 bg-gradient-to-r from-purple-800 to-indigo-800 relative"></div>
+              <div className="h-32 bg-purple-900 relative">
+                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent)] pointer-events-none"></div>
+              </div>
 
               <div className="px-6 sm:px-8 pb-8">
                 {/* Profile Picture & Basic Info - Row */}
@@ -231,25 +264,42 @@ export default function Profile() {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex border-b border-gray-200 mb-8">
+                <div className="relative flex border-b border-gray-100 mb-10">
                   <button
+                    type="button"
                     onClick={() => setActiveTab('general')}
-                    className={`flex-1 pb-3 px-1 text-sm font-medium transition-colors text-center ${activeTab === 'general'
-                      ? 'text-purple-600 border-b-2 border-purple-600'
-                      : 'text-gray-500 hover:text-gray-700'
-                      }`}
+                    className={`flex-1 py-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 relative z-10
+                      ${activeTab === 'general' ? 'text-purple-900' : 'text-gray-400 hover:text-gray-600'}`}
                   >
                     Personal Information
                   </button>
                   <button
+                    type="button"
                     onClick={() => setActiveTab('security')}
-                    className={`flex-1 pb-3 px-1 text-sm font-medium transition-colors text-center ${activeTab === 'security'
-                      ? 'text-purple-600 border-b-2 border-purple-600'
-                      : 'text-gray-500 hover:text-gray-700'
-                      }`}
+                    className={`flex-1 py-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 relative z-10
+                      ${activeTab === 'security' ? 'text-purple-900' : 'text-gray-400 hover:text-gray-600'}`}
                   >
                     Security & Password
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('bookings')}
+                    className={`flex-1 py-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 relative z-10
+                      ${activeTab === 'bookings' ? 'text-purple-900' : 'text-gray-400 hover:text-gray-600'}`}
+                  >
+                    Bookings
+                  </button>
+
+                  {/* Animated Underline Indicator */}
+                  <motion.div
+                    className="absolute bottom-0 left-0 h-[3px] bg-purple-900 rounded-full z-20"
+                    initial={false}
+                    animate={{
+                      left: activeTab === 'general' ? '0%' : activeTab === 'security' ? '33.33%' : '66.66%'
+                    }}
+                    style={{ width: '33.33%' }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
                 </div>
 
                 {/* Tab Content */}
