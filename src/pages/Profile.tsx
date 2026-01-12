@@ -67,7 +67,9 @@ export default function Profile() {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      setBookings(response.data.bookings || []);
+      // Handle both direct array and nested object response formats
+      const bookingsData = Array.isArray(response.data) ? response.data : response.data?.bookings || [];
+      setBookings(bookingsData);
     } catch (err: any) {
       console.error('Failed to fetch bookings:', err);
       setBookings([]);
@@ -438,24 +440,24 @@ export default function Profile() {
                                 <tr key={booking.id || index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                                   <td className="px-6 py-4 text-sm font-medium text-gray-900">#{booking.id || 'N/A'}</td>
                                   <td className="px-6 py-4 text-sm text-gray-700">
-                                    <div className="font-medium">{booking.category || 'N/A'}</div>
-                                    <div className="text-xs text-gray-500">{booking.subcategory || ''}</div>
+                                    <div className="font-medium">{booking.category?.name || 'N/A'}</div>
+                                    <div className="text-xs text-gray-500">{booking.sub_category?.name || booking.subCategory?.name || ''}</div>
                                   </td>
                                   <td className="px-6 py-4 text-sm text-gray-700">
                                     <div className="flex items-center gap-2">
                                       <Calendar className="w-4 h-4 text-gray-400" />
-                                      <span>{booking.date || 'N/A'}</span>
+                                      <span>{booking.booking_date ? new Date(booking.booking_date).toLocaleDateString() : 'N/A'}</span>
                                     </div>
                                     <div className="flex items-center gap-2 mt-1">
                                       <Clock className="w-4 h-4 text-gray-400" />
-                                      <span>{booking.time || 'N/A'}</span>
+                                      <span>{booking.start_time ? `${booking.start_time.slice(0, 5)} - ${booking.end_time?.slice(0, 5)}` : 'N/A'}</span>
                                     </div>
                                   </td>
                                   <td className="px-6 py-4 text-sm">
                                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${booking.status === 'confirmed' ? 'bg-purple-100 text-purple-800' :
-                                        booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                          booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                                            'bg-gray-100 text-gray-800'
+                                      booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                        booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                                          'bg-gray-100 text-gray-800'
                                       }`}>
                                       {booking.status ? booking.status.charAt(0).toUpperCase() + booking.status.slice(1) : 'Unknown'}
                                     </span>
@@ -463,7 +465,7 @@ export default function Profile() {
                                   <td className="px-6 py-4 text-sm font-semibold text-gray-900">
                                     <div className="flex items-center gap-1">
                                       <DollarSign className="w-4 h-4 text-gray-400" />
-                                      {booking.price || '0'}
+                                      {booking.instance?.price || '0'}
                                     </div>
                                   </td>
                                 </tr>

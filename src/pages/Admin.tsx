@@ -589,7 +589,7 @@ export default function Admin() {
                         <div className="text-xs text-gray-500">{booking.instance?.name}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <div>{booking.booking_date}</div>
+                        <div>{new Date(booking.booking_date).toLocaleDateString()}</div>
                         <div className="text-xs text-gray-500">{booking.start_time} - {booking.end_time}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
