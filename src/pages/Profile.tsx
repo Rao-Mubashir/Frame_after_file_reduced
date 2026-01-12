@@ -352,7 +352,7 @@ export default function Profile() {
                         </div>
                       </form>
                     </motion.div>
-                  ) : (
+                  ) : activeTab === 'security' ? (
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -403,6 +403,75 @@ export default function Profile() {
                           </button>
                         </div>
                       </form>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                      className="w-full max-w-full"
+                    >
+                      {bookingsLoading ? (
+                        <div className="flex items-center justify-center py-12">
+                          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-900"></div>
+                        </div>
+                      ) : bookings.length === 0 ? (
+                        <div className="text-center py-12">
+                          <Calendar className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                          <h3 className="text-lg font-semibold text-gray-700 mb-2">No Bookings Yet</h3>
+                          <p className="text-gray-500 text-sm">You haven't made any bookings. Start exploring our services!</p>
+                        </div>
+                      ) : (
+                        <div className="overflow-x-auto">
+                          <table className="w-full border-collapse">
+                            <thead>
+                              <tr className="bg-gray-50 border-b-2 border-gray-200">
+                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Booking ID</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Service</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Date & Time</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Status</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Price</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {bookings.map((booking, index) => (
+                                <tr key={booking.id || index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                                  <td className="px-6 py-4 text-sm font-medium text-gray-900">#{booking.id || 'N/A'}</td>
+                                  <td className="px-6 py-4 text-sm text-gray-700">
+                                    <div className="font-medium">{booking.category || 'N/A'}</div>
+                                    <div className="text-xs text-gray-500">{booking.subcategory || ''}</div>
+                                  </td>
+                                  <td className="px-6 py-4 text-sm text-gray-700">
+                                    <div className="flex items-center gap-2">
+                                      <Calendar className="w-4 h-4 text-gray-400" />
+                                      <span>{booking.date || 'N/A'}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 mt-1">
+                                      <Clock className="w-4 h-4 text-gray-400" />
+                                      <span>{booking.time || 'N/A'}</span>
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 text-sm">
+                                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${booking.status === 'confirmed' ? 'bg-purple-100 text-purple-800' :
+                                        booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                          booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                                            'bg-gray-100 text-gray-800'
+                                      }`}>
+                                      {booking.status ? booking.status.charAt(0).toUpperCase() + booking.status.slice(1) : 'Unknown'}
+                                    </span>
+                                  </td>
+                                  <td className="px-6 py-4 text-sm font-semibold text-gray-900">
+                                    <div className="flex items-center gap-1">
+                                      <DollarSign className="w-4 h-4 text-gray-400" />
+                                      {booking.price || '0'}
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
                     </motion.div>
                   )}
                 </div>
